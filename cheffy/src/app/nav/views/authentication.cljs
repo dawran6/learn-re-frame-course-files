@@ -19,5 +19,5 @@
     [:> Box {:display "flex"
              :justify-content "flex-end"
              :py 1}
-     (for [item nav-items]
-       [nav-item item])]))
+     (for [{:keys [id] :as item} nav-items]
+       ^{:key id} [nav-item item])]))
