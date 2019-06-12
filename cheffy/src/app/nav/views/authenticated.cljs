@@ -1,11 +1,12 @@
-(ns app.nav.views.authentication
+(ns app.nav.views.authenticated
   (:require [re-frame.core :as rf]
             ["@smooth-ui/core-sc" :refer [Box]]
             [app.nav.views.nav-item :refer [nav-item]]))
 
 (defn authenticated
   []
-  (let [nav-items [{:id :saved
+  (let [active-nav @(rf/subscribe [:active-nav])
+        nav-items [{:id :saved
                     :name "Saved"
                     :href "#saved"
                     :dispatch #(rf/dispatch [:set-active-nav :saved])}
@@ -13,7 +14,7 @@
                     :name "Recipes"
                     :href "#recipes"
                     :dispatch #(rf/dispatch [:set-active-nav :recipes])}
-                   {:id :inboxex
+                   {:id :inboxes
                     :name "Inbox"
                     :href "#inbox"
                     :dispatch #(rf/dispatch [:set-active-nav :inboxes])}
@@ -28,5 +29,10 @@
     [:> Box {:display "flex"
              :justify-content "flex-end"
              :py 1}
-     (for [{:keys [id] :as item} nav-items]
-       ^{:key id} [nav-item item])]))
+     (for [{:keys [id name href dispatch]} nav-items]
+       [nav-item {:key id
+                  :id id
+                  :name name
+                  :href href
+                  :dispatch dispatch
+                  :active-nav active-nav}])]))

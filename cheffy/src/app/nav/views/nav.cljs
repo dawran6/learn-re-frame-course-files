@@ -1,5 +1,5 @@
 (ns app.nav.views.nav
-  (:require [app.nav.views.authentication :refer [authenticated]]))
+  (:require [app.nav.views.authenticated :refer [authenticated]]))
 
 (defn nav
   []
