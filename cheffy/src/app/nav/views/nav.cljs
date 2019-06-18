@@ -4,7 +4,7 @@
 
 (defn nav
   []
-  (let [user false #_true]
+  (let [user true]
     (if user
       [authenticated]
       [public])))
