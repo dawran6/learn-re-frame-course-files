@@ -40,7 +40,8 @@
        {:db (-> db
                 (assoc-in [:auth :uid] email)
                 (update-in [:errors] dissoc :email))
-        :dispatch [:set-active-nav :saved]}))))
+        :dispatch [:set-active-nav :saved]
+        :navigate-to {:path "/saved"}}))))
 
 (reg-event-fx
  :sign-up
@@ -57,14 +58,16 @@
                                       :saved #{}
                                       :inboxes {}})
             (update-in [:errors] dissoc :email))
-    :dispatch [:set-active-nav :saved]}))
+    :dispatch [:set-active-nav :saved]
+    :navigate-to {:path "/saved"}}))
 
 (reg-event-fx
  :log-out
  remove-user-interceptors
  (fn [{:keys [db]} _]
    {:db (assoc-in db [:auth :uid] nil)
-    :dispatch [:set-active-nav :recipes]}))
+    :dispatch [:set-active-nav :recipes]
+    :navigate-to {:path "/recipes"}}))
 
 (reg-event-db
  :update-profile
@@ -80,4 +83,5 @@
      {:db (-> db
               (assoc-in [:auth :uid] nil)
               (update-in [:users] dissoc uid))
-      :dispatch [:set-active-nav :recipes]})))
+      :dispatch [:set-active-nav :recipes]
+      :navigate-to {:path "/recipes"}})))
