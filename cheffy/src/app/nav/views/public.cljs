@@ -6,9 +6,8 @@
 
 (defn public
   []
-  (let [active-nav @(rf/subscribe [:active-nav])
-        nav-items [
-                   {:id :recipes
+  (let [active-page @(rf/subscribe [:active-page])
+        nav-items [{:id :recipes
                     :name "Recipes"
                     :href (router/path-for :recipes)
                     :dispatch #(rf/dispatch [:set-active-nav :recipes])}
@@ -33,4 +32,4 @@
                   :name name
                   :href href
                   :dispatch dispatch
-                  :active-nav active-nav}])]))
+                  :active-page active-page}])]))

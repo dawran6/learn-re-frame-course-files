@@ -35,7 +35,7 @@
 
 (defn app
   []
-  (let [active-page @(rf/subscribe [:active-nav])]
+  (let [active-page @(rf/subscribe [:active-page])]
     [:<>
      [:> Normalize]
      [:> ThemeProvider {:theme cheffy-theme}
