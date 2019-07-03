@@ -19,7 +19,9 @@
             [app.nav.subs]
             ;; -- recipes --
             [app.recipes.views.recipes-page :refer [recipes-page]]
+            [app.recipes.views.recipe-page :refer [recipe-page]]
             [app.recipes.subs]
+            [app.recipes.events]
             [app.theme :refer [cheffy-theme]]
             ["@smooth-ui/core-sc" :refer [Normalize ThemeProvider Button Grid Row Col]]))
 
@@ -32,6 +34,7 @@
     :become-a-chef [become-a-chef]
     :inboxes [inboxes]
     :recipes [recipes-page]
+    :recipe [recipe-page]
     [recipes-page]))
 
 (defn app

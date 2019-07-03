@@ -14,3 +14,17 @@
  (fn [db _]
    (let [recipes (vals (get-in db [:recipes]))]
      (filter #(= (:public? %) true) recipes))))
+
+(reg-sub
+ :recipe
+ (fn [db _]
+   (let [active-recipe (get-in db [:nav :active-recipe])]
+     (get-in db [:recipes active-recipe]))))
+
+(reg-sub
+ :author?
+ (fn [db _]
+   (let [uid (get-in db [:auth :uid])
+         active-recipe (get-in db [:nav :active-recipe])
+         recipe (get-in db [:recipes active-recipe])]
+     (= uid (:cook recipe)))))
