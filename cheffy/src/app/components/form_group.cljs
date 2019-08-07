@@ -1,5 +1,5 @@
 (ns app.components.form-group
-  (:require ["@smooth-ui/core-sc" :refer [FormGroup Label Input]]))
+  (:require ["@smooth-ui/core-sc" :refer [FormGroup Label Input Textarea]]))
 
 (defn form-group
   [{:keys [id label type values]}]

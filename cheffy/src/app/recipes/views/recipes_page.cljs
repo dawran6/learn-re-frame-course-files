@@ -2,7 +2,8 @@
   (:require [app.components.page-nav :refer [page-nav]]
             ["@smooth-ui/core-sc" :refer [Typography]]
             [re-frame.core :as rf]
-            [app.recipes.views.recipe-list :refer [recipe-list]]))
+            [app.recipes.views.recipe-list :refer [recipe-list]]
+            [app.recipes.views.recipe-editor :refer [recipe-editor]]))
 
 (defn recipes-page
   []
@@ -10,7 +11,8 @@
         drafts @(rf/subscribe [:drafts])
         logged-in? @(rf/subscribe [:logged-in?])]
     [:<>
-     [page-nav {:center "recipes"}]
+     [page-nav {:center "recipes"
+                :right (when logged-in? [recipe-editor])}]
      (when (seq drafts)
        [:<>
         [:> Typography {:variant "h4"
