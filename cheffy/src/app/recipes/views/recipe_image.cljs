@@ -10,7 +10,6 @@
   []
   (let [initial-values {:img ""}
         values (r/atom initial-values)
-        {:keys [img name]} @(rf/subscribe [:recipe])
         author? @(rf/subscribe [:author?])
         open-modal (fn [{:keys [modal-name recipe]}]
                      (rf/dispatch [:open-modal modal-name])
@@ -19,7 +18,8 @@
                (rf/dispatch [:upsert-image img])
                (reset! values initial-values))]
     (fn []
-      (let [active-modal @(rf/subscribe [:active-modal])]
+      (let [{:keys [img name]} @(rf/subscribe [:recipe])
+            active-modal @(rf/subscribe [:active-modal])]
         [:<>
          [:> Box {:class (when author? "editable")
                   :background-image (str "url(" (or img "/img/placeholder.jpg") ")")

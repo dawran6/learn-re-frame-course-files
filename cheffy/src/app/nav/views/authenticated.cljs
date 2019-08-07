@@ -18,7 +18,7 @@
                     :dispatch #(rf/dispatch [:set-active-nav :recipes])}
                    {:id :inboxes
                     :name "Inbox"
-                    :href (router/path-for :inboxex)
+                    :href (router/path-for :inboxes)
                     :dispatch #(rf/dispatch [:set-active-nav :inboxes])}
                    {:id :become-a-chef
                     :name "Chef"
