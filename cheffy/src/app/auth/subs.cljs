@@ -23,3 +23,8 @@
  (fn [db _]
    (let [uid (get-in db [:auth :uid])]
      (= :chef (get-in db [:users uid :role])))))
+
+(reg-sub
+ :user-image
+ (fn [db [_ uid]]
+   (get-in db [:users uid :profile :img])))
