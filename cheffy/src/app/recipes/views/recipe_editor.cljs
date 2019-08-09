@@ -3,6 +3,7 @@
             [re-frame.core :as rf]
             [app.components.modal :refer [modal]]
             [app.components.form-group :refer [form-group]]
+            [app.helpers :as h]
             ["@smooth-ui/core-sc" :refer [Row Col Button Typography]]
             ["styled-icons/fa-solid/Plus" :refer [Plus]]
             [clojure.string :as str]))
@@ -14,10 +15,13 @@
         open-modal (fn [{:keys [modal-name recipe]}]
                      (rf/dispatch [:open-modal modal-name])
                      (reset! values recipe))
-        save (fn [{:keys [name prep-time]}]
-               (rf/dispatch [:upsert-recipe {:name (str/trim name)
-                                             :prep-time (js/parseInt prep-time)}])
-               (reset! values initial-values))]
+        save (fn [event {:keys [name prep-time]}]
+               (.preventDefault event)
+               (when (and (not (str/blank? name))
+                          (h/valid-number? prep-time))
+                 (rf/dispatch [:upsert-recipe {:name (str/trim name)
+                                               :prep-time (js/parseInt prep-time)}])
+                 (reset! values initial-values)))]
     (fn []
       (let [{:keys [name prep-time]} @(rf/subscribe [:recipe])
             active-page @(rf/subscribe [:active-page])]
@@ -36,17 +40,20 @@
             [:> Plus {:size 16}]])
          [modal {:modal-name :recipe-editor
                  :header "Recipe"
-                 :body [:> Row
-                        [:> Col
-                         [form-group {:id :name
-                                      :label "Name"
-                                      :type "text"
-                                      :values values}]]
-                        [:> Col {:xs 4}
-                         [form-group {:id :prep-time
-                                      :label "Cooking time (min)"
-                                      :type "number"
-                                      :values values}]]]
+                 :body [:form {:on-submit #(save % @values)}
+                        [:> Row
+                         [:> Col
+                          [form-group {:id :name
+                                       :label "Name"
+                                       :type "text"
+                                       :values values}]]
+                         [:> Col {:xs 4}
+                          [form-group {:id :prep-time
+                                       :label "Cooking time (min)"
+                                       :type "number"
+                                       :values values
+                                       :on-key-down #(when (= (.-which %) 13)
+                                                       (save % @values))}]]]]
                  :footer [:<>
                           (when name
                             [:a {:href "#"
@@ -56,5 +63,5 @@
                           [:> Button {:variant "light"
                                       :on-click #(rf/dispatch [:close-modal])}
                            "Cancel"]
-                          [:> Button {:on-click #(save @values)}
+                          [:> Button {:on-click #(save % @values)}
                            "Save"]]}]]))))

@@ -4,7 +4,8 @@
             [re-frame.core :as rf]
             [reagent.core :as r]
             [app.components.form-group :refer [form-group]]
-            [app.components.modal :refer [modal]]))
+            [app.components.modal :refer [modal]]
+            [clojure.string :as str]))
 
 (defn recipe-image
   []
@@ -14,9 +15,11 @@
         open-modal (fn [{:keys [modal-name recipe]}]
                      (rf/dispatch [:open-modal modal-name])
                      (reset! values recipe))
-        save (fn [img]
-               (rf/dispatch [:upsert-image img])
-               (reset! values initial-values))]
+        save (fn [event {:keys [img]}]
+               (.preventDefault event)
+               (when (not (str/blank? img))
+                 (rf/dispatch [:upsert-image {:img img}])
+                 (reset! values initial-values)))]
     (fn []
       (let [{:keys [img name]} @(rf/subscribe [:recipe])
             active-modal @(rf/subscribe [:active-modal])]
@@ -32,13 +35,14 @@
          (when author?
            [modal {:modal-name :image-editor
                    :header "Image"
-                   :body [form-group {:id :img
-                                      :label "URL"
-                                      :type "text"
-                                      :values values}]
+                   :body [:form {:on-submit #(save % @values)}
+                          [form-group {:id :img
+                                       :label "URL"
+                                       :type "text"
+                                       :values values}]]
                    :footer [:<>
                             [:> Button {:on-click #(rf/dispatch [:close-modal])
                                         :variant "light"}
                              "Cancel"]
-                            [:> Button {:on-click #(save @values)}
+                            [:> Button {:on-click #(save % @values)}
                              "Save"]]}])]))))
